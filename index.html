@@ -7,19 +7,24 @@
 <meta name="description" content="Tester Hub records your test actions on Windows and writes the documentation for you — screenshots, descriptions, test plans, and reports, automatically.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#12151a;
-    --panel:#1a1f27;
-    --panel-2:#20262f;
-    --line:#2a313c;
-    --text:#e9edf2;
-    --text-dim:#8b94a3;
-    --rec:#ff5c4d;
-    --amber:#e8a33d;
-    --mint:#5fd9a4;
-    --radius:10px;
+    --bg:#0b0a1c;
+    --bg-2:#100e26;
+    --panel:rgba(255,255,255,.045);
+    --panel-solid:#15132e;
+    --line:rgba(255,255,255,.09);
+    --text:#f3f1fb;
+    --text-dim:#9d99c2;
+    --text-dimmer:#716d95;
+
+    --cyan:#22e0ff;
+    --pink:#ff5ea8;
+    --violet:#8b6bff;
+    --lime:#c6ff5e;
+    --amber:#ffb020;
+    --radius:16px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -28,181 +33,402 @@
     background:var(--bg);
     color:var(--text);
     font-family:'Inter',sans-serif;
-    line-height:1.5;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
   a{color:inherit;}
-  .wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;position:relative;z-index:2;}
   .mono{font-family:'JetBrains Mono',monospace;}
-  .display{font-family:'Space Grotesk',sans-serif;}
+
+  ::selection{background:var(--violet);color:#fff;}
+
+  /* ---------- BACKGROUND ---------- */
+  .blob{position:absolute;border-radius:50%;filter:blur(100px);z-index:0;pointer-events:none;}
+  .blob-1{width:560px;height:560px;background:var(--violet);opacity:.30;top:-220px;left:-180px;}
+  .blob-2{width:480px;height:480px;background:var(--pink);opacity:.22;top:20px;right:-200px;}
+  .blob-3{width:520px;height:520px;background:var(--cyan);opacity:.15;bottom:-260px;left:25%;}
+  @keyframes drift{0%,100%{transform:translate(0,0);}50%{transform:translate(24px,-16px);}}
+  .blob-1{animation:drift 16s ease-in-out infinite;}
+  .blob-2{animation:drift 20s ease-in-out infinite reverse;}
+  @media (prefers-reduced-motion: reduce){ .blob-1,.blob-2{animation:none;} }
 
   /* ---------- NAV ---------- */
   nav{
+    position:sticky;top:0;z-index:10;
     display:flex;align-items:center;justify-content:space-between;
-    padding:22px 24px;
+    padding:18px 24px;
     border-bottom:1px solid var(--line);
+    background:rgba(11,10,28,.75);
+    backdrop-filter:blur(10px);
   }
-  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--rec);animation:blink 1.6s infinite;}
-  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
-  .navlink{font-size:14px;color:var(--text-dim);text-decoration:none;padding:9px 16px;border-radius:7px;border:1px solid var(--line);}
-  .navlink:hover{color:var(--text);border-color:#3a4250;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15.5px;font-family:'Sora',sans-serif;}
+  .brand-badge{
+    width:30px;height:30px;border-radius:9px;
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .nav-links{display:flex;align-items:center;gap:32px;}
+  .nav-links a{font-size:14px;color:var(--text-dim);text-decoration:none;font-weight:500;}
+  .nav-links a:hover{color:var(--text);}
+  .navcta{
+    font-size:13.5px;font-weight:700;color:var(--bg);text-decoration:none;
+    padding:10px 18px;border-radius:100px;
+    background:linear-gradient(135deg,var(--cyan),var(--lime));
+  }
+  .nav-inner{display:flex;align-items:center;gap:36px;}
+  @media (max-width:760px){ .nav-links{display:none;} }
 
   /* ---------- HERO ---------- */
-  header.hero{padding:76px 0 64px;border-bottom:1px solid var(--line);}
+  header.hero{padding:88px 0 40px;position:relative;text-align:center;}
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
     font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;
-    color:var(--amber);background:rgba(232,163,61,.08);
-    border:1px solid rgba(232,163,61,.25);
-    padding:6px 12px;border-radius:100px;margin-bottom:24px;
+    color:var(--text-dim);font-weight:500;
+    background:var(--panel);border:1px solid var(--line);
+    padding:7px 16px;border-radius:100px;margin-bottom:28px;
   }
+  .eyebrow b{color:var(--lime);font-weight:600;}
   h1{
-    font-family:'Space Grotesk',sans-serif;
-    font-weight:700;
-    font-size:clamp(34px,5vw,54px);
-    line-height:1.08;
-    letter-spacing:-.01em;
-    margin:0 0 20px;
-    max-width:11ch;
+    font-family:'Sora',sans-serif;
+    font-weight:800;
+    font-size:clamp(38px,6vw,64px);
+    line-height:1.06;
+    letter-spacing:-.015em;
+    margin:0 auto 22px;
+    max-width:16ch;
   }
-  h1 span{color:var(--mint);}
-  .sub{font-size:17px;color:var(--text-dim);max-width:46ch;margin:0 0 34px;}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
-  .cta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  h1 .grad{
+    background:linear-gradient(90deg,var(--cyan),var(--violet) 55%,var(--pink));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sub{font-size:18px;color:var(--text-dim);max-width:52ch;margin:0 auto 38px;}
+  .cta-row{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px;}
   .btn-primary{
     display:inline-flex;align-items:center;gap:10px;
-    background:var(--mint);color:#0d1611;font-weight:600;font-size:15px;
-    padding:14px 22px;border-radius:8px;text-decoration:none;
-    transition:transform .15s ease, background .15s ease;
+    background:linear-gradient(135deg,var(--pink),var(--violet));
+    color:#fff;font-weight:700;font-size:15px;
+    padding:16px 28px;border-radius:100px;text-decoration:none;
+    box-shadow:0 14px 34px -10px rgba(255,94,168,.55);
+    transition:transform .15s ease, box-shadow .15s ease;
   }
-  .btn-primary:hover{background:#7ce6b8;transform:translateY(-1px);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 40px -8px rgba(255,94,168,.7);}
   .btn-primary svg{width:16px;height:16px;}
-  .meta{font-size:13px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:8px;
+    color:var(--text);font-weight:600;font-size:14.5px;text-decoration:none;
+    padding:15px 6px;border-bottom:1px solid transparent;
+  }
+  .btn-ghost:hover{border-color:var(--text-dimmer);}
+  .meta-row{font-size:13px;color:var(--text-dimmer);font-family:'JetBrains Mono',monospace;}
 
-  /* ---------- LIVE LOG (signature element) ---------- */
-  .log-card{
+  /* stat strip */
+  .stats{
+    display:flex;justify-content:center;gap:0;margin:64px auto 0;max-width:820px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .stat{flex:1;padding:22px 16px;text-align:center;border-left:1px solid var(--line);}
+  .stat:first-child{border-left:none;}
+  .stat b{display:block;font-family:'Sora',sans-serif;font-size:24px;font-weight:700;
+    background:linear-gradient(90deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .stat span{font-size:12.5px;color:var(--text-dimmer);}
+
+  /* ---------- APP PREVIEW MOCKUP (signature element) ---------- */
+  section.preview{padding:70px 0 30px;position:relative;}
+  .device{
+    max-width:920px;margin:0 auto;border-radius:20px;overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 40px 100px -30px rgba(139,107,255,.35), 0 0 0 1px rgba(255,255,255,.03);
+    background:var(--panel-solid);
+  }
+  .device-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);}
+  .device-dot{width:9px;height:9px;border-radius:50%;}
+  .device-bar .d1{background:#ff5f57;} .device-bar .d2{background:#febc2e;} .device-bar .d3{background:#28c840;}
+  .device-url{margin-left:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dimmer);
+    background:rgba(255,255,255,.05);padding:4px 12px;border-radius:6px;}
+  .device-body{padding:26px;}
+  .mock-settings{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+  .mock-field{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px;padding:12px 14px;}
+  .mock-field .lbl{font-size:10.5px;color:var(--text-dimmer);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  .mock-field .val{font-size:13px;color:var(--text);font-family:'JetBrains Mono',monospace;}
+  .mock-actions{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+  .mock-btn{font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;border:1px solid var(--line);color:var(--text-dim);}
+  .mock-btn.active{background:linear-gradient(135deg,var(--pink),var(--violet));color:#fff;border:none;}
+  .mock-table{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .mock-row{display:grid;grid-template-columns:90px 1fr 90px;gap:10px;padding:11px 14px;font-size:12.5px;align-items:center;}
+  .mock-row.head{background:rgba(255,255,255,.03);color:var(--text-dimmer);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+  .mock-row:not(.head){border-top:1px solid var(--line);color:var(--text-dim);}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;border-radius:100px;}
+  .chip.ok{background:rgba(198,255,94,.12);color:var(--lime);}
+  .chip.ai{background:rgba(255,176,32,.12);color:var(--amber);}
+
+  /* ---------- FEATURES ---------- */
+  section.features{padding:100px 0 40px;position:relative;}
+  .section-head{max-width:60ch;margin:0 auto 52px;text-align:center;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);letter-spacing:.05em;margin-bottom:12px;font-weight:600;}
+  .section-head h2{font-family:'Sora',sans-serif;font-weight:700;font-size:32px;margin:0 0 12px;}
+  .section-head p{color:var(--text-dim);margin:0;font-size:15.5px;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .feature{
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-    overflow:hidden;
+    padding:28px 24px;transition:border-color .2s ease, transform .2s ease;
   }
-  .log-head{
-    display:flex;align-items:center;gap:8px;
-    padding:12px 16px;border-bottom:1px solid var(--line);
-    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);
+  .feature:hover{border-color:rgba(255,255,255,.18);transform:translateY(-3px);}
+  .f-icon{
+    width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:19px;margin-bottom:16px;
   }
-  .log-head .dot{background:var(--rec);}
-  .log-body{padding:14px 16px;min-height:230px;font-family:'JetBrains Mono',monospace;font-size:13px;}
-  .log-line{opacity:0;transform:translateY(4px);animation:appear .35s ease forwards;padding:5px 0;display:flex;gap:10px;color:var(--text-dim);}
-  .log-line .tag{color:var(--mint);flex-shrink:0;}
-  .log-line .tag.ai{color:var(--amber);}
-  @keyframes appear{to{opacity:1;transform:translateY(0);}}
-  @media (prefers-reduced-motion: reduce){
-    .log-line{animation:none;opacity:1;transform:none;}
-    .dot{animation:none;}
-  }
+  .f-icon.i1{background:rgba(34,224,255,.14);}
+  .f-icon.i2{background:rgba(255,94,168,.14);}
+  .f-icon.i3{background:rgba(198,255,94,.14);}
+  .f-icon.i4{background:rgba(255,176,32,.14);}
+  .f-icon.i5{background:rgba(139,107,255,.14);}
+  .f-icon.i6{background:rgba(34,224,255,.14);}
+  .feature h3{font-family:'Sora',sans-serif;font-size:16.5px;font-weight:700;margin:0 0 8px;}
+  .feature p{font-size:13.5px;color:var(--text-dim);margin:0;}
 
   /* ---------- WORKFLOW ---------- */
-  section.flow{padding:80px 0;border-bottom:1px solid var(--line);}
-  .flow-head{max-width:52ch;margin-bottom:48px;}
-  .flow-head .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);letter-spacing:.04em;margin-bottom:10px;}
-  .flow-head h2{font-family:'Space Grotesk',sans-serif;font-size:28px;margin:0 0 10px;}
-  .flow-head p{color:var(--text-dim);margin:0;}
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-  .step{background:var(--panel);padding:26px 22px;}
-  .step .n{font-family:'JetBrains Mono',monospace;color:var(--text-dim);font-size:12px;margin-bottom:14px;}
-  .step h3{font-family:'Space Grotesk',sans-serif;font-size:17px;margin:0 0 8px;}
+  section.flow{padding:100px 0;position:relative;}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .step{background:var(--panel);padding:30px 24px;border-left:1px solid var(--line);position:relative;}
+  .step:first-child{border-left:none;}
+  .step .n{font-family:'Sora',sans-serif;font-weight:800;font-size:13px;letter-spacing:.08em;margin-bottom:16px;
+    background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .step h3{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;margin:0 0 8px;}
   .step p{font-size:13.5px;color:var(--text-dim);margin:0;}
 
-  /* ---------- DOWNLOAD ---------- */
-  section.download{padding:80px 0;}
-  .dl-card{
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    border:1px solid var(--line);border-radius:14px;
-    padding:44px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;
+  /* ---------- FAQ ---------- */
+  section.faq{padding:20px 0 100px;}
+  .faq-list{max-width:760px;margin:0 auto;}
+  details{
+    border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:12px;
+    background:var(--panel);
   }
-  .dl-card h2{font-family:'Space Grotesk',sans-serif;font-size:26px;margin:0 0 12px;}
-  .dl-card p{color:var(--text-dim);margin:0 0 24px;max-width:42ch;}
+  summary{
+    font-family:'Sora',sans-serif;font-weight:600;font-size:15px;cursor:pointer;
+    list-style:none;display:flex;justify-content:space-between;align-items:center;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";font-size:20px;color:var(--text-dimmer);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{color:var(--text-dim);font-size:14px;margin:14px 0 0;line-height:1.65;}
+
+  /* ---------- DOWNLOAD ---------- */
+  section.download{padding:20px 0 110px;position:relative;}
+  .dl-card{
+    background:linear-gradient(135deg,rgba(139,107,255,.16),rgba(34,224,255,.08));
+    border:1px solid var(--line);border-radius:22px;
+    padding:52px;display:grid;grid-template-columns:1.2fr .8fr;gap:44px;align-items:center;
+    box-shadow:0 40px 100px -35px rgba(139,107,255,.4);
+    text-align:left;
+  }
+  .dl-card h2{font-family:'Sora',sans-serif;font-weight:700;font-size:30px;margin:0 0 12px;}
+  .dl-card p{color:var(--text-dim);margin:0 0 26px;max-width:44ch;}
   .req-list{list-style:none;padding:0;margin:0;font-size:13.5px;color:var(--text-dim);}
-  .req-list li{padding:9px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;}
+  .req-list li{padding:11px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;}
   .req-list li:first-child{border-top:none;}
-  .req-list b{color:var(--text);font-weight:500;}
+  .req-list b{color:var(--text);font-weight:600;}
 
   .notice{
     display:flex;gap:12px;
-    background:rgba(232,163,61,.06);border:1px solid rgba(232,163,61,.25);
-    border-radius:8px;padding:16px 18px;margin-top:28px;font-size:13.5px;color:var(--text-dim);
+    background:rgba(255,176,32,.10);border:1px solid rgba(255,176,32,.3);
+    border-radius:10px;padding:16px 18px;margin-top:28px;font-size:13.5px;color:var(--text-dim);
   }
   .notice b{color:var(--amber);}
 
-  footer{padding:32px 24px;text-align:center;color:var(--text-dim);font-size:13px;border-top:1px solid var(--line);}
+  footer{padding:44px 24px 36px;border-top:1px solid var(--line);position:relative;z-index:2;}
+  .foot-wrap{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .foot-brand{display:flex;align-items:center;gap:9px;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;}
+  footer .copy{font-size:12.5px;color:var(--text-dimmer);}
 
   @media (max-width:820px){
     .hero-grid{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:1fr 1fr;}
     .steps{grid-template-columns:1fr 1fr;}
-    .dl-card{grid-template-columns:1fr;padding:28px;}
+    .step{border-left:none;border-top:1px solid var(--line);}
+    .step:first-child{border-top:none;}
+    .dl-card{grid-template-columns:1fr;padding:32px;text-align:center;}
+    .dl-card p{margin-left:auto;margin-right:auto;}
+    .stats{flex-wrap:wrap;}
+    .stat{flex:1 1 50%;border-left:none;border-top:1px solid var(--line);}
   }
-  @media (max-width:520px){
+  @media (max-width:560px){
+    .feature-grid{grid-template-columns:1fr;}
     .steps{grid-template-columns:1fr;}
+    .mock-settings{grid-template-columns:1fr;}
+    .blob-1,.blob-2,.blob-3{filter:blur(60px);}
   }
 </style>
 </head>
 <body>
 
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
 <nav>
-  <div class="brand"><span class="dot"></span> Tester Hub</div>
-  <a class="navlink" href="#download">Download</a>
+  <div class="nav-inner">
+    <div class="brand"><span class="brand-badge">🎯</span> Tester Hub</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+  <a class="navcta" href="#download">Download</a>
 </nav>
 
 <header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">● for windows · desktop app</div>
-      <h1>Record it once.<br>It <span>documents</span> itself.</h1>
-      <p class="sub">Tester Hub watches you click through a test, and writes the screenshots, step descriptions, test plan, and report while you work — so QA documentation stops being a second job.</p>
-      <div class="cta-row">
-        <a class="btn-primary" href="#download">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-          Download for Windows
-        </a>
-        <span class="meta">v1.0 · 64-bit · free</span>
-      </div>
+  <div class="wrap">
+    <div class="eyebrow">● <b>v1.0</b> — free for Windows</div>
+    <h1>Record it once.<br>It <span class="grad">documents</span> itself.</h1>
+    <p class="sub">Tester Hub watches you click through a test, and writes the screenshots, step descriptions, test plan, and report while you work — so QA documentation stops being a second job.</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="#download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+        Download for Windows
+      </a>
     </div>
+    <div class="meta-row">64-bit · no account required to try · runs 100% locally</div>
 
-    <div class="log-card">
-      <div class="log-head"><span class="dot"></span> recorder — live</div>
-      <div class="log-body" id="logBody"></div>
+    <div class="stats">
+      <div class="stat"><b>4</b><span>export formats</span></div>
+      <div class="stat"><b>0</b><span>manual screenshots</span></div>
+      <div class="stat"><b>100%</b><span>data stays on your PC</span></div>
     </div>
   </div>
 </header>
 
-<section class="flow">
+<section class="preview">
   <div class="wrap">
-    <div class="flow-head">
+    <div class="device">
+      <div class="device-bar">
+        <span class="device-dot d1"></span><span class="device-dot d2"></span><span class="device-dot d3"></span>
+        <span class="device-url">localhost:5299 / recorder</span>
+      </div>
+      <div class="device-body">
+        <div class="mock-settings">
+          <div class="mock-field"><div class="lbl">Output folder</div><div class="val">C:\ScreenDocumentation</div></div>
+          <div class="mock-field"><div class="lbl">Typing capture</div><div class="val">on_enter</div></div>
+        </div>
+        <div class="mock-actions">
+          <div class="mock-btn active">▶ Start Recording</div>
+          <div class="mock-btn">⏸ Pause</div>
+          <div class="mock-btn">⏹ Stop &amp; Save</div>
+        </div>
+        <div class="mock-table">
+          <div class="mock-row head"><span>Time</span><span>Action</span><span>Status</span></div>
+          <div class="mock-row"><span>00:03</span><span>Clicked "Login" button</span><span class="chip ok">✓ saved</span></div>
+          <div class="mock-row"><span>00:06</span><span>Typed into "Username" field</span><span class="chip ai">AI…</span></div>
+          <div class="mock-row"><span>00:09</span><span>Clicked "Submit" — test plan updated</span><span class="chip ok">✓ saved</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">EVERYTHING BUILT IN</div>
+      <h2>One tool, the whole documentation loop</h2>
+      <p>No plugins to wire up, no separate note-taking app running alongside your test session.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="f-icon i1">📸</div>
+        <h3>Auto screenshot on every action</h3>
+        <p>Every click and keystroke gets its own matching screenshot, captured the instant it happens.</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon i2">✨</div>
+        <h3>AI step descriptions</h3>
+        <p>Plain-language descriptions generated automatically via Gemini or a local Ollama model — your choice.</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon i3">🧩</div>
+        <h3>Java UI element matching</h3>
+        <p>Upload a discovered-elements jar to skip AI calls entirely on Swing / SWT / JavaFX apps you've mapped before.</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon i4">🎬</div>
+        <h3>Per-action video clips</h3>
+        <p>Short clips recorded around each action, so reviewers can see exactly what happened, not just a still frame.</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon i5">📄</div>
+        <h3>Export to Word, PDF, or Slides</h3>
+        <p>One click turns a recorded session into a polished, shareable report in the format your team already uses.</p>
+      </div>
+      <div class="feature">
+        <div class="f-icon i6">🔒</div>
+        <h3>Runs entirely on your machine</h3>
+        <p>No cloud upload, no external server — recordings, screenshots, and reports never leave your computer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow" id="how">
+  <div class="wrap">
+    <div class="section-head">
       <div class="kicker">HOW A SESSION BECOMES A REPORT</div>
       <h2>Four steps, no extra typing</h2>
       <p>Each stage runs automatically off the last — you drive the app under test, Tester Hub builds the paper trail.</p>
     </div>
     <div class="steps">
       <div class="step">
-        <div class="n">01</div>
+        <div class="n">STEP 01</div>
         <h3>Record</h3>
         <p>Captures every click and keystroke with a matching screenshot, right on your screen.</p>
       </div>
       <div class="step">
-        <div class="n">02</div>
+        <div class="n">STEP 02</div>
         <h3>Describe</h3>
         <p>An AI describer turns each action into a plain-language step, no manual note-taking.</p>
       </div>
       <div class="step">
-        <div class="n">03</div>
+        <div class="n">STEP 03</div>
         <h3>Plan</h3>
         <p>Steps are organized into a structured test plan you can review, edit, and reuse.</p>
       </div>
       <div class="step">
-        <div class="n">04</div>
+        <div class="n">STEP 04</div>
         <h3>Report</h3>
         <p>Export straight to Word, PDF, or a slide deck — ready to hand to your team.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">GOOD TO KNOW</div>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>Is Tester Hub really free?</summary>
+        <p>Yes — the current version is completely free to download and use, no account or license key required.</p>
+      </details>
+      <details>
+        <summary>Does my data ever leave my computer?</summary>
+        <p>No. Tester Hub runs a small local server on your own machine and opens it in your browser — recordings, screenshots, and reports are all stored locally. Nothing is uploaded anywhere unless you choose to use an external AI provider for descriptions.</p>
+      </details>
+      <details>
+        <summary>Can my whole team share the same recordings?</summary>
+        <p>Not yet in this version — each install keeps its own local data, so "team" features currently work per-machine rather than across the internet. Shared team workspaces are on the roadmap.</p>
+      </details>
+      <details>
+        <summary>What happens on first launch?</summary>
+        <p>Windows may show a "Windows protected your PC" notice since this is an independently-published app — click More info → Run anyway to continue. This only appears once.</p>
+      </details>
+      <details>
+        <summary>Is it Windows-only?</summary>
+        <p>Yes, for now — Tester Hub relies on Windows-specific automation and screen-capture APIs.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -233,43 +459,16 @@
 </section>
 
 <footer>
-  Tester Hub — built for testers who'd rather test than write it up.
+  <div class="foot-wrap">
+    <div class="foot-brand"><span class="brand-badge">🎯</span> Tester Hub</div>
+    <div class="copy">Built for testers who'd rather test than write it up.</div>
+  </div>
 </footer>
 
 <script>
   // Replace this href with your actual GitHub Release asset URL, e.g.
-  // https://github.com/yourname/testerhub-downloads/releases/latest/download/TesterHub.exe
-  document.getElementById('dlBtn').href = "#REPLACE_WITH_YOUR_RELEASE_ASSET_URL";
-
-  // Signature element: simulated live recorder feed
-  const lines = [
-    { tag: '✓', cls: '', text: 'clicked "Login" button — captured' },
-    { tag: 'AI', cls: 'ai', text: 'describing step 1…' },
-    { tag: '✓', cls: '', text: '"Enter your username" — screenshot saved' },
-    { tag: '✓', cls: '', text: 'typed into "Username" field' },
-    { tag: 'AI', cls: 'ai', text: 'describing step 2…' },
-    { tag: '✓', cls: '', text: 'clicked "Submit" — captured' },
-    { tag: '✓', cls: '', text: 'test plan updated — 3 steps' },
-  ];
-
-  const body = document.getElementById('logBody');
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function playLog() {
-    body.innerHTML = '';
-    lines.forEach((l, i) => {
-      const el = document.createElement('div');
-      el.className = 'log-line';
-      el.style.animationDelay = prefersReduced ? '0s' : (i * 0.45) + 's';
-      el.innerHTML = `<span class="tag ${l.cls}">${l.tag}</span><span>${l.text}</span>`;
-      body.appendChild(el);
-    });
-  }
-
-  playLog();
-  if (!prefersReduced) {
-    setInterval(playLog, lines.length * 450 + 2400);
-  }
+  // https://github.com/jiaxin1274/testerhub-download/releases/latest/download/TesterHub.exe
+  document.getElementById('dlBtn').href = "https://github.com/jiaxin1274/testerhub-download/releases/latest/download/TesterHub.exe";
 </script>
 
 </body>
